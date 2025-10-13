@@ -14,15 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error('JWT secret is not defined');
     }
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (req) => {
-          let token = null;
-          if (req && req.cookies) {
-            token = req.cookies['Authentication'];
-          }
-          return token;
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: jwtConfiguration.secret?.toString(),
     });
   }
