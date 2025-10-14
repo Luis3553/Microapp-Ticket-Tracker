@@ -11,6 +11,7 @@ import { IssuesModule } from './issues/issues.module';
 import { LabelsModule } from './labels/labels.module';
 import { IssueLabelsModule } from './issue-labels/issue-labels.module';
 import { CommentsModule } from './comments/comments.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CommentsModule } from './comments/comments.module';
     LabelsModule,
     IssueLabelsModule,
     CommentsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UsersRepository],
