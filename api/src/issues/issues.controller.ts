@@ -11,7 +11,6 @@ import {
   ParseIntPipe,
   Req,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { IssuesService } from './issues.service';
 import {
   type IssueCreateInput,

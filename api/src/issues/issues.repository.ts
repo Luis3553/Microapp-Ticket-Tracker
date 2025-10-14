@@ -27,7 +27,7 @@ export class IssuesRepository {
       .insert(schema.issues)
       .values(values)
       .returning();
-    return row!;
+    return row;
   }
 
   async findById(id: number): Promise<IssueRow | undefined> {

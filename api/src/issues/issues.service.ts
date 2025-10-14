@@ -50,7 +50,7 @@ export class IssuesService {
     const updated = await this.repo.update(id, dto);
 
     // Emit events on notable changes
-    const events: Array<Partial<typeof schema.events.$inferInsert>> = [];
+    const events: Array<typeof schema.events.$inferInsert> = [];
 
     if (dto.status && dto.status !== before.status) {
       events.push({
@@ -58,7 +58,7 @@ export class IssuesService {
         actorId,
         type: 'status_changed',
         fromStatus: before.status,
-        toStatus: dto.status as any,
+        toStatus: dto.status as (typeof schema.events.$inferInsert)['toStatus'],
         meta: null,
       });
     }
@@ -76,7 +76,7 @@ export class IssuesService {
     }
 
     if (events.length) {
-      await this.db.insert(schema.events).values(events as any);
+      await this.db.insert(schema.events).values(events);
     }
 
     return updated;
