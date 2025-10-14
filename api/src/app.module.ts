@@ -9,6 +9,7 @@ import { UsersRepository } from './users/users.repository';
 import { ProjectsModule } from './projects/projects.module';
 import { IssuesModule } from './issues/issues.module';
 import { LabelsModule } from './labels/labels.module';
+import { IssueLabelsModule } from './issue-labels/issue-labels.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { LabelsModule } from './labels/labels.module';
     ProjectsModule,
     IssuesModule,
     LabelsModule,
+    IssueLabelsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UsersRepository],
