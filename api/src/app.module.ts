@@ -10,6 +10,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { IssuesModule } from './issues/issues.module';
 import { LabelsModule } from './labels/labels.module';
 import { IssueLabelsModule } from './issue-labels/issue-labels.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { IssueLabelsModule } from './issue-labels/issue-labels.module';
     IssuesModule,
     LabelsModule,
     IssueLabelsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UsersRepository],
