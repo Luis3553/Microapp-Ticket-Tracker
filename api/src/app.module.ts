@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersRepository } from './users/users.repository';
 import { ProjectsModule } from './projects/projects.module';
+import { IssuesModule } from './issues/issues.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ProjectsModule } from './projects/projects.module';
     AuthModule,
     UsersModule,
     ProjectsModule,
+    IssuesModule,
   ],
   controllers: [AppController],
   providers: [AppService, UsersRepository],
