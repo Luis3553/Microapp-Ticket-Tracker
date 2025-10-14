@@ -1,7 +1,7 @@
-import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import { useAuthSession } from '@/features/auth/hooks/useAuthSession'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { setAccessToken } from '@/lib/authToken'
 import { api } from '@/lib/axios'
+import AppLayout from '@/features/layout/AppLayout'
 
 export const SESSION_KEY = ['auth', 'session']
 
@@ -27,15 +27,3 @@ export const Route = createFileRoute('/app')({
   },
   component: AppLayout,
 })
-
-function AppLayout() {
-  const { user } = useAuthSession()
-  return (
-    <div className="min-h-screen">
-      <header className="border-b p-3 text-sm">Hello {user?.name}</header>
-      <main className="p-4">
-        <Outlet />
-      </main>
-    </div>
-  )
-}
