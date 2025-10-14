@@ -34,11 +34,11 @@ export class AuthController {
   // --- LOGIN (Local strategy) ---
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(
+  login(
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { user, accessToken, refreshToken } = await this.auth.login(req.user);
+    const { user, accessToken, refreshToken } = this.auth.login(req.user);
     res.cookie('rt', refreshToken, rtCookieOpts);
     return { user, accessToken };
   }
@@ -49,7 +49,7 @@ export class AuthController {
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const rt = req.cookies?.rt;
+    const rt = typeof req.cookies?.rt === 'string' ? req.cookies.rt : null;
     if (!rt) throw new UnauthorizedException('Missing refresh cookie');
     const { user, accessToken, refreshToken } = await this.auth.refresh(rt);
     res.cookie('rt', refreshToken, rtCookieOpts);
@@ -58,7 +58,7 @@ export class AuthController {
 
   // --- LOGOUT (clear cookie) ---
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('rt', { path: '/auth/refresh' });
     return { success: true };
   }

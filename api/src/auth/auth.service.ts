@@ -8,11 +8,10 @@ import { UsersService } from 'src/users/users.service';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { RegisterDto } from './dto/register-dto';
 import { compare } from 'bcrypt';
-import { DbUser, PublicUser } from 'src/types/user';
+import { PublicUser } from 'src/types/user';
 
 const ACCESS_SECRET = process.env.JWT_SECRET as JwtSignOptions['secret'];
-const REFRESH_SECRET = (process.env.JWT_REFRESH_SECRET ||
-  ACCESS_SECRET) as JwtSignOptions['secret'];
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || ACCESS_SECRET;
 const ACCESS_TTL = (process.env.JWT_ACCESS_EXPIRES_IN ||
   '7d') as JwtSignOptions['expiresIn'];
 const REFRESH_TTL = (process.env.JWT_REFRESH_EXPIRES_IN ||
@@ -27,8 +26,9 @@ export class AuthService {
 
   // Called by LocalStrategy
   async validateUser(email: string, password: string): Promise<PublicUser> {
-    const user: any = await this.users.findByEmail(email);
-    if (!user || !user.passwordHash)
+    const user = await this.users.findByEmail(email);
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user.passwordHash)
       throw new UnauthorizedException('Invalid credentials');
 
     const ok = await compare(password, user.passwordHash);
@@ -40,7 +40,7 @@ export class AuthService {
   async register(input: RegisterDto) {
     const existing = await this.users.findByEmail(input.email);
     if (existing) throw new ConflictException('Email already in use');
-    const created: DbUser = await this.users.create({ ...input, role: 'user' });
+    const created = await this.users.create({ ...input, role: 'user' });
 
     const user: PublicUser = {
       id: created.id,
@@ -52,7 +52,7 @@ export class AuthService {
     return { user, ...tokens };
   }
 
-  async login(user: PublicUser) {
+  login(user: PublicUser) {
     const tokens = this.issueTokens(user);
     return { user, ...tokens };
   }
@@ -66,7 +66,7 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
-    const u: any = await this.users.findById(payload.id);
+    const u = await this.users.findById(payload.id);
     if (!u) throw new UnauthorizedException();
 
     const user: PublicUser = {
@@ -80,7 +80,7 @@ export class AuthService {
   }
 
   async me(userId: number) {
-    const u: any = await this.users.findById(userId);
+    const u = await this.users.findById(userId);
     if (!u) throw new UnauthorizedException();
     const user: PublicUser = {
       id: u.id,
