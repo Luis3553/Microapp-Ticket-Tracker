@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DRIZZLE } from 'src/db/db.module';
 import * as schema from 'src/db/schema';
-import { and, desc, eq, ilike, or } from 'drizzle-orm';
+import { desc, eq, ilike, or } from 'drizzle-orm';
 import type {
   LabelCreateInput,
   LabelListQuery,
@@ -21,7 +21,7 @@ export class LabelsRepository {
       .insert(schema.labels)
       .values(values)
       .returning();
-    return row!;
+    return row;
   }
 
   async findById(id: number): Promise<LabelRow | undefined> {

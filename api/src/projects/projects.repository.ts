@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DRIZZLE } from 'src/db/db.module';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from 'src/db/schema';
-import { and, desc, eq, ilike, or } from 'drizzle-orm';
+import { desc, eq, ilike, or } from 'drizzle-orm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectRow } from './projects.zod';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -18,7 +18,7 @@ export class ProjectsRepository {
       .insert(schema.projects)
       .values(values)
       .returning();
-    return row!;
+    return row;
   }
 
   async findById(id: number): Promise<ProjectRow | undefined> {

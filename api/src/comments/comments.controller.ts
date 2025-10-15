@@ -18,7 +18,7 @@ export class CommentsController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
     const actorId = req.user.id;
-    const role = req.user.role as 'user' | 'admin';
+    const role = req.user.role;
     return this.svc.remove(id, actorId, role);
   }
 }

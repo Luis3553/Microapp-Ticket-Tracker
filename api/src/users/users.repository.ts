@@ -16,7 +16,7 @@ export class UsersRepository {
 
   async create(values: UserInsert): Promise<UserRow> {
     const [row] = await this.db.insert(schema.users).values(values).returning();
-    return row!;
+    return row;
   }
 
   async findById(id: number): Promise<UserRow | undefined> {
@@ -40,7 +40,7 @@ export class UsersRepository {
   }
 
   async list(opts: { q?: string; limit?: number; offset?: number } = {}) {
-    const { q, limit = 20, offset = 0 } = opts;
+    const { limit = 20, offset = 0 } = opts;
     const rows = await this.db
       .select()
       .from(schema.users)

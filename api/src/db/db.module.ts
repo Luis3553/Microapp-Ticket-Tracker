@@ -9,7 +9,7 @@ export const DRIZZLE = Symbol('DRIZZLE');
   providers: [
     {
       provide: DRIZZLE,
-      useFactory: async () => {
+      useFactory: () => {
         const pool = new Pool({ connectionString: process.env.DATABASE_URL });
         return drizzle(pool, { schema });
       },

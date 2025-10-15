@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { hash } from 'bcrypt';
 import { RegisterDto } from 'src/auth/dto/register-dto';
+import { DbUser } from 'src/types/user';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +35,7 @@ export class UsersService {
     userId: number,
     input: { name?: string; password?: string },
   ) {
-    const patch: any = {};
+    const patch: Partial<Pick<DbUser, 'name' | 'passwordHash'>> = {};
     if (input.name) patch.name = input.name;
     if (input.password) patch.passwordHash = await hash(input.password, 12);
 

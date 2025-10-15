@@ -1,8 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from 'src/db/schema';
 import { DRIZZLE } from 'src/db/db.module';
-import { and, desc, eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import type {
   CommentCreateInput,
   CommentListQuery,
@@ -37,7 +37,7 @@ export class CommentsRepository {
       .insert(schema.comments)
       .values({ issueId, authorId, body: input.body })
       .returning();
-    return row!;
+    return row;
   }
 
   async findById(id: number): Promise<CommentRow | undefined> {
