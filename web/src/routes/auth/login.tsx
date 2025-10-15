@@ -1,17 +1,17 @@
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 import LoginForm from '@/features/auth/components/LoginForm'
 import AuthLayout from '@/features/auth/layout/AuthLayout'
-import { createFileRoute, useSearch } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
-  const search = useSearch({ from: '/auth/login' }) as { redirect?: string }
+  const search = useSearch({ from: '/auth/login' })
 
   return (
     <AuthLayout>
-      <LoginForm redirectTo={search.redirect} />
+      <LoginForm redirectTo={(search as any).redirect} />
     </AuthLayout>
   )
 }

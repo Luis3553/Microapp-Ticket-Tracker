@@ -1,7 +1,8 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
-import { getAccessToken, setAccessToken, clearAccessToken } from './authToken'
+import axios from 'axios'
+import { clearAccessToken, getAccessToken, setAccessToken } from './authToken'
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
-const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const baseURL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3000'
 
 export const api = axios.create({
   baseURL,
@@ -13,8 +14,8 @@ const raw = axios.create({ baseURL, withCredentials: true })
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getAccessToken()
   if (token) {
-    config.headers = config.headers ?? {}
-    config.headers.Authorization = `Bearer ${token}`
+    // headers are always defined on InternalAxiosRequestConfig
+    ;(config.headers as any).Authorization = `Bearer ${token}`
   }
   return config
 })
@@ -40,7 +41,6 @@ api.interceptors.response.use(
         return new Promise((resolve, reject) => {
           pendingQueue.push((token) => {
             if (token) {
-              original.headers = original.headers ?? {}
               ;(original.headers as any).Authorization = `Bearer ${token}`
             }
             api.request(original).then(resolve).catch(reject)
@@ -51,7 +51,7 @@ api.interceptors.response.use(
       isRefreshing = true
       try {
         const { data } = await raw.post('/auth/refresh') // { user, accessToken }
-        const newToken = (data as any)?.accessToken as string | undefined
+        const newToken = (data as { accessToken?: string }).accessToken
         if (!newToken) throw new Error('No accessToken in refresh response')
 
         setAccessToken(newToken)
@@ -61,7 +61,6 @@ api.interceptors.response.use(
         pendingQueue = []
 
         // retry original
-        original.headers = original.headers ?? {}
         ;(original.headers as any).Authorization = `Bearer ${newToken}`
         return api.request(original)
       } catch (e) {

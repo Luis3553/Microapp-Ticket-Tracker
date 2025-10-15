@@ -8,9 +8,7 @@ export const SESSION_KEY = ['auth', 'session']
 export const Route = createFileRoute('/app')({
   beforeLoad: async function requireAuth({ context, location }) {
     const qc = context.queryClient
-    const session = qc.getQueryData(SESSION_KEY) as
-      | { accessToken?: string }
-      | undefined
+    const session = qc.getQueryData<{ accessToken?: string }>(SESSION_KEY)
 
     if (!session?.accessToken) {
       try {

@@ -1,6 +1,9 @@
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Link } from '@tanstack/react-router'
+import { useAuthMutations } from '../hooks/useAuthMutations'
+import { AuthSchemas } from '../types'
+import type { z } from 'zod'
 import {
   Form,
   FormControl,
@@ -11,9 +14,6 @@ import {
 } from '@/features/shared/components/ui/form'
 import { Input } from '@/features/shared/components/ui/input'
 import { Button } from '@/features/shared/components/ui/button'
-import { useAuthMutations } from '../hooks/useAuthMutations'
-import { AuthSchemas } from '../types'
-import { Link } from '@tanstack/react-router'
 
 type FormValues = z.infer<typeof AuthSchemas.login>
 
