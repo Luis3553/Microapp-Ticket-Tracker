@@ -1,27 +1,27 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { Project } from '@/features/projects/types'
+import { api } from '@/lib/axios'
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
 } from '@/features/shared/components/ui/card'
 import { Button } from '@/features/shared/components/ui/button'
 import { Input } from '@/features/shared/components/ui/input'
 import { Textarea } from '@/features/shared/components/ui/textarea'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from '@/features/shared/components/ui/form'
-import type { Project } from '@/features/projects/types'
 
 type Issue = { id: number; title: string; status: string; priority: string }
 
@@ -37,9 +37,7 @@ const createIssueSchema = z.object({
 type CreateIssueValues = z.infer<typeof createIssueSchema>
 
 function ProjectDetailPage() {
-  const { projectId } = useParams({ from: '/app/projects/$projectId/' }) as {
-    projectId: string
-  }
+  const { projectId } = useParams({ from: '/app/projects/$projectId/' })
   const pid = Number(projectId)
   const qc = useQueryClient()
 
@@ -51,7 +49,7 @@ function ProjectDetailPage() {
   const issues = useQuery({
     queryKey: ['issues', 'byProject', pid],
     queryFn: async () =>
-      (await api.get<Issue[]>(`/issues?projectId=${pid}`)).data,
+      (await api.get<Array<Issue>>(`/issues?projectId=${pid}`)).data,
   })
 
   const createIssue = useMutation({

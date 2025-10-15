@@ -1,8 +1,8 @@
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
 } from '@/features/shared/components/ui/card'
 import { useProjectsQuery } from '@/features/projects/hooks/useProjectsQuery'
 

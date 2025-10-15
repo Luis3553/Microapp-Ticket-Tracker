@@ -1,6 +1,6 @@
-import { api } from '@/lib/axios'
 import type { Project } from '../types'
 import type { AxiosPromise } from 'axios'
+import { api } from '@/lib/axios'
 
 export const createProject = (
   data: Pick<Project, 'name' | 'description' | 'key'>,
@@ -8,7 +8,6 @@ export const createProject = (
   return api.post('/projects', data)
 }
 
-export const getProjects = async (): Promise<Project[]> => {
-  const response = await api.get<Project[]>('/projects')
-  return response.data
+export const getProjects = (): AxiosPromise<Array<Project>> => {
+  return api.get<Array<Project>>('/projects')
 }

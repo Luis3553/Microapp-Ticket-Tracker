@@ -1,6 +1,6 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { CreateProjectCard } from '@/features/projects/components/createProjectCard'
 import { ProjectListCard } from '@/features/projects/components/ProjectListCard'
-import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/app/projects/')({
   component: ProjectsPage,

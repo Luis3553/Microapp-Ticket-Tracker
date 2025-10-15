@@ -1,5 +1,15 @@
 import * as React from 'react'
-import { Outlet, Link, useRouterState } from '@tanstack/react-router'
+import { Link, Outlet, useRouterState } from '@tanstack/react-router'
+import {
+  Bell,
+  CircleHelp,
+  FolderKanban,
+  Home,
+  LogOut,
+  Menu,
+  Search,
+  Tag,
+} from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -18,22 +28,12 @@ import {
 } from '@/features/shared/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/features/shared/components/ui/avatar'
 import { Separator } from '@/features/shared/components/ui/separator'
-import {
-  Menu,
-  Home,
-  FolderKanban,
-  Tag,
-  CircleHelp,
-  LogOut,
-  Bell,
-  Search,
-} from 'lucide-react'
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession'
 import { useAuthMutations } from '@/features/auth/hooks/useAuthMutations'
 
 type NavItem = { title: string; href: string; icon: React.ElementType }
 
-const NAV_ITEMS: NavItem[] = [
+const NAV_ITEMS: Array<NavItem> = [
   { title: 'Overview', href: '/app', icon: Home },
   { title: 'Projects', href: '/app/projects', icon: FolderKanban },
   { title: 'Issues', href: '/app/issues', icon: CircleHelp },
@@ -131,7 +131,7 @@ export default function AppLayout() {
                   <Button variant="ghost" className="gap-2">
                     <Avatar className="h-6 w-6">
                       <AvatarFallback>
-                        {user?.name?.[0]?.toUpperCase() ?? 'U'}
+                        {user?.name[0]?.toUpperCase() ?? 'U'}
                       </AvatarFallback>
                     </Avatar>
                     <span className="hidden sm:inline text-sm">
@@ -151,10 +151,10 @@ export default function AppLayout() {
                     <Link to="/app/projects">Projects</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/app/issues">Issues</Link>
+                    {/* <Link to="/app/issues">Issues</Link> */}
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/app/labels">Labels</Link>
+                    {/* <Link to="/app/labels">Labels</Link> */}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

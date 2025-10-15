@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import type { Project } from '../types'
 import { getProjects } from '../api/projects.api'
+import type { Project } from '../types'
 
 export const useProjectsQuery = () => {
-  return useQuery<Project[], Error>({
+  return useQuery<Array<Project>, Error>({
     queryKey: ['projects', 'list'],
-    queryFn: () => getProjects(),
+    queryFn: async () => {
+      const response = await getProjects()
+      return response.data
+    },
   })
 }
