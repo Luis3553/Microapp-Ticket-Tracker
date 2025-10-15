@@ -1,13 +1,13 @@
 import * as React from 'react'
+import { Outlet } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/features/shared/components/ui/card'
 import { Separator } from '@/features/shared/components/ui/separator'
-import { Outlet } from '@tanstack/react-router'
 
 type Props = {
   children?: React.ReactNode

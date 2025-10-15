@@ -1,15 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getErrorMessage } from '@/lib/errors'
-import {
-  loginApi,
-  registerApi,
-  refreshApi,
-  logoutApi,
-  type Session,
-} from '../api/auth.api'
-import { setAccessToken, clearAccessToken } from '@/lib/authToken'
-import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { loginApi, logoutApi, refreshApi, registerApi } from '../api/auth.api'
+import type { Session } from '../api/auth.api'
+import { getErrorMessage } from '@/lib/errors'
+import { clearAccessToken, setAccessToken } from '@/lib/authToken'
 
 const SESSION_KEY = ['auth', 'session']
 
@@ -31,7 +26,8 @@ export function useAuthMutations({ loginProps }: UseAuthMutationsProps) {
 
   const login = useMutation({
     mutationFn: loginApi,
-    onSuccess: (data) => {
+    onSuccess: (res) => {
+      const data = res.data
       setSession(data)
       if (loginProps?.redirectTo) navigate({ to: loginProps.redirectTo })
       else navigate({ to: '/app' })
@@ -46,7 +42,8 @@ export function useAuthMutations({ loginProps }: UseAuthMutationsProps) {
 
   const register = useMutation({
     mutationFn: registerApi,
-    onSuccess: (data) => {
+    onSuccess: (res) => {
+      const data = res.data
       setSession(data)
       navigate({ to: '/app' })
       toast(`Welcome, ${data.user.name}!`)
@@ -60,7 +57,7 @@ export function useAuthMutations({ loginProps }: UseAuthMutationsProps) {
 
   const refresh = useMutation({
     mutationFn: refreshApi,
-    onSuccess: (data) => setSession(data),
+    onSuccess: (res) => setSession(res.data),
     onError: () => setSession(null),
   })
 

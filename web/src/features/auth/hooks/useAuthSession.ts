@@ -4,7 +4,7 @@ import type { Session } from '../api/auth.api'
 export function useAuthSession() {
   const { data: session } = useQuery<Session | null>({
     queryKey: ['auth', 'session'],
-    queryFn: async () => null,
+    queryFn: () => null,
     initialData: null,
     staleTime: Infinity,
     gcTime: Infinity,
@@ -15,8 +15,8 @@ export function useAuthSession() {
 
   return {
     session,
-    isAuthenticated: Boolean(session?.accessToken && session?.user),
-    user: session?.user ?? null,
-    accessToken: session?.accessToken ?? null,
+    isAuthenticated: !!(session && session.accessToken && session.user),
+    user: session ? session.user : null,
+    accessToken: session ? session.accessToken : null,
   }
 }
