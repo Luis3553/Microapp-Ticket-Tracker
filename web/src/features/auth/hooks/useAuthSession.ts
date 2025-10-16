@@ -14,8 +14,6 @@ export function useAuthSession() {
   })
 
   return {
-    session,
-    isAuthenticated: !!(session && session.accessToken && session.user),
     user: session ? session.user : null,
     accessToken: session ? session.accessToken : null,
   }

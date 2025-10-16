@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import {
-  Bell,
   CircleHelp,
   FolderKanban,
-  Home,
   LogOut,
   Menu,
   Search,
@@ -34,7 +32,6 @@ import { useAuthMutations } from '@/features/auth/hooks/useAuthMutations'
 type NavItem = { title: string; href: string; icon: React.ElementType }
 
 const NAV_ITEMS: Array<NavItem> = [
-  { title: 'Overview', href: '/app', icon: Home },
   { title: 'Projects', href: '/app/projects', icon: FolderKanban },
   { title: 'Issues', href: '/app/issues', icon: CircleHelp },
   { title: 'Labels', href: '/app/labels', icon: Tag },
@@ -77,6 +74,9 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
 function MobileSidebar() {
   const [open, setOpen] = React.useState(false)
+  const router = useRouterState()
+  const current = router.location.href
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -89,7 +89,25 @@ function MobileSidebar() {
           Microapp
         </div>
         <Separator />
-        <SidebarNav onNavigate={() => setOpen(false)} />
+        <ScrollArea className="flex-1">
+          <nav className="p-2 space-y-1">
+            {NAV_ITEMS.map(({ title, href, icon: Icon }) => {
+              const isActive = current.startsWith(href)
+              return (
+                <Link
+                  key={href}
+                  to={href}
+                  onClick={() => setOpen(false)}
+                  className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition
+                    ${isActive ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{title}</span>
+                </Link>
+              )
+            })}
+          </nav>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   )
@@ -117,18 +135,10 @@ export default function AppLayout() {
                 <Input className="pl-9" placeholder="Search…" />
               </div>
 
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden md:inline-flex"
-              >
-                <Bell className="h-5 w-5" />
-              </Button>
-
               {/* User menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="gap-2">
+                  <Button variant="ghost" className="gap-2 ml-auto">
                     <Avatar className="h-6 w-6">
                       <AvatarFallback>
                         {user?.name[0]?.toUpperCase() ?? 'U'}
@@ -145,16 +155,13 @@ export default function AppLayout() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/app">Overview</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link to="/app/projects">Projects</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    {/* <Link to="/app/issues">Issues</Link> */}
+                    <Link to="/app/issues">Issues</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    {/* <Link to="/app/labels">Labels</Link> */}
+                    <Link to="/app/labels">Labels</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

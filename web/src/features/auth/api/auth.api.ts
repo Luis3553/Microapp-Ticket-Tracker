@@ -23,7 +23,3 @@ export function refreshApi(): AxiosPromise<Session> {
 export function logoutApi(): AxiosPromise<{ success: true }> {
   return api.post('/auth/logout')
 }
-
-export function meApi(): AxiosPromise<User> {
-  return api.get('/auth/me')
-}

@@ -9,28 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/app'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppProjectsIndexRouteImport } from './routes/app/projects/index'
+import { Route as AppLabelsIndexRouteImport } from './routes/app/labels/index'
+import { Route as AppIssuesIndexRouteImport } from './routes/app/issues/index'
 import { Route as AppProjectsProjectIdIndexRouteImport } from './routes/app/projects/$projectId/index'
+import { Route as AppIssuesIdIndexRouteImport } from './routes/app/issues/$id/index'
 
-const AppRoute = AppRouteImport.update({
-  id: '/app',
-  path: '/app',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
@@ -45,93 +54,130 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLabelsIndexRoute = AppLabelsIndexRouteImport.update({
+  id: '/labels/',
+  path: '/labels/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppIssuesIndexRoute = AppIssuesIndexRouteImport.update({
+  id: '/issues/',
+  path: '/issues/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppProjectsProjectIdIndexRoute =
   AppProjectsProjectIdIndexRouteImport.update({
     id: '/projects/$projectId/',
     path: '/projects/$projectId/',
-    getParentRoute: () => AppRoute,
+    getParentRoute: () => AppRouteRoute,
   } as any)
+const AppIssuesIdIndexRoute = AppIssuesIdIndexRouteImport.update({
+  id: '/issues/$id/',
+  path: '/issues/$id/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/app': typeof AppRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/app/': typeof AppIndexRoute
+  '/app/issues': typeof AppIssuesIndexRoute
+  '/app/labels': typeof AppLabelsIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
+  '/app/issues/$id': typeof AppIssuesIdIndexRoute
   '/app/projects/$projectId': typeof AppProjectsProjectIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
-  '/app': typeof AppRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/app': typeof AppIndexRoute
+  '/app/issues': typeof AppIssuesIndexRoute
+  '/app/labels': typeof AppLabelsIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
+  '/app/issues/$id': typeof AppIssuesIdIndexRoute
   '/app/projects/$projectId': typeof AppProjectsProjectIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/app': typeof AppRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/app/': typeof AppIndexRoute
+  '/app/issues/': typeof AppIssuesIndexRoute
+  '/app/labels/': typeof AppLabelsIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
+  '/app/issues/$id/': typeof AppIssuesIdIndexRoute
   '/app/projects/$projectId/': typeof AppProjectsProjectIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/app'
+    | '/auth'
     | '/auth/login'
     | '/auth/register'
+    | '/app/'
+    | '/app/issues'
+    | '/app/labels'
     | '/app/projects'
+    | '/app/issues/$id'
     | '/app/projects/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/app'
     | '/auth/login'
     | '/auth/register'
+    | '/app'
+    | '/app/issues'
+    | '/app/labels'
     | '/app/projects'
+    | '/app/issues/$id'
     | '/app/projects/$projectId'
   id:
     | '__root__'
     | '/'
-    | '/auth'
     | '/app'
+    | '/auth'
     | '/auth/login'
     | '/auth/register'
+    | '/app/'
+    | '/app/issues/'
+    | '/app/labels/'
     | '/app/projects/'
+    | '/app/issues/$id/'
     | '/app/projects/$projectId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -140,6 +186,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/auth/register': {
       id: '/auth/register'
@@ -160,17 +213,60 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/app/projects'
       preLoaderRoute: typeof AppProjectsIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/labels/': {
+      id: '/app/labels/'
+      path: '/labels'
+      fullPath: '/app/labels'
+      preLoaderRoute: typeof AppLabelsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/issues/': {
+      id: '/app/issues/'
+      path: '/issues'
+      fullPath: '/app/issues'
+      preLoaderRoute: typeof AppIssuesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/app/projects/$projectId/': {
       id: '/app/projects/$projectId/'
       path: '/projects/$projectId'
       fullPath: '/app/projects/$projectId'
       preLoaderRoute: typeof AppProjectsProjectIdIndexRouteImport
-      parentRoute: typeof AppRoute
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/issues/$id/': {
+      id: '/app/issues/$id/'
+      path: '/issues/$id'
+      fullPath: '/app/issues/$id'
+      preLoaderRoute: typeof AppIssuesIdIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
   }
 }
+
+interface AppRouteRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppIssuesIndexRoute: typeof AppIssuesIndexRoute
+  AppLabelsIndexRoute: typeof AppLabelsIndexRoute
+  AppProjectsIndexRoute: typeof AppProjectsIndexRoute
+  AppIssuesIdIndexRoute: typeof AppIssuesIdIndexRoute
+  AppProjectsProjectIdIndexRoute: typeof AppProjectsProjectIdIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppIssuesIndexRoute: AppIssuesIndexRoute,
+  AppLabelsIndexRoute: AppLabelsIndexRoute,
+  AppProjectsIndexRoute: AppProjectsIndexRoute,
+  AppIssuesIdIndexRoute: AppIssuesIdIndexRoute,
+  AppProjectsProjectIdIndexRoute: AppProjectsProjectIdIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
 interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
@@ -186,22 +282,10 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
-interface AppRouteChildren {
-  AppProjectsIndexRoute: typeof AppProjectsIndexRoute
-  AppProjectsProjectIdIndexRoute: typeof AppProjectsProjectIdIndexRoute
-}
-
-const AppRouteChildren: AppRouteChildren = {
-  AppProjectsIndexRoute: AppProjectsIndexRoute,
-  AppProjectsProjectIdIndexRoute: AppProjectsProjectIdIndexRoute,
-}
-
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

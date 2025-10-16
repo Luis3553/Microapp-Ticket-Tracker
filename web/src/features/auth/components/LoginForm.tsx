@@ -63,7 +63,11 @@ export default function LoginForm({ redirectTo }: { redirectTo?: string }) {
         >
           Don't have an account? Register
         </Link>
-        <Button type="submit" className="w-full" disabled={login.isPending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={login.isPending}
+        >
           {login.isPending ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
