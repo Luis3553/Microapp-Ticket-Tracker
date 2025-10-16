@@ -12,7 +12,9 @@ export const Route = createFileRoute('/app')({
 
     if (!session?.accessToken) {
       try {
-        const { data } = await api.post('/auth/refresh')
+        const { data } = await api.post<{ user: unknown; accessToken: string }>(
+          '/auth/refresh',
+        )
         setAccessToken(data.accessToken)
         qc.setQueryData(SESSION_KEY, data)
       } catch {

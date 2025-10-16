@@ -1,23 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/features/shared/components/ui/card'
+import { api } from '@/lib/axios'
+import { Card, CardContent, CardHeader, CardTitle } from '@/features/shared/components/ui/card'
 import { Button } from '@/features/shared/components/ui/button'
 import { Input } from '@/features/shared/components/ui/input'
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from '@/features/shared/components/ui/form'
 
@@ -37,7 +32,7 @@ function LabelsPage() {
   const qc = useQueryClient()
   const labels = useQuery({
     queryKey: ['labels'],
-    queryFn: async () => (await api.get<Label[]>('/labels')).data,
+    queryFn: async () => (await api.get<Array<Label>>('/labels')).data,
   })
   const createMut = useMutation({
     mutationFn: async (v: CreateValues) => (await api.post('/labels', v)).data,

@@ -1,8 +1,8 @@
+import * as React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/axios'
 import { Input } from '@/features/shared/components/ui/input'
-import * as React from 'react'
+import { api } from '@/lib/axios'
 
 type Issue = {
   id: number
@@ -22,7 +22,7 @@ function IssuesPage() {
     queryKey: ['issues', 'all', q],
     queryFn: async () =>
       (
-        await api.get<Issue[]>(
+        await api.get<Array<Issue>>(
           `/issues${q ? `?q=${encodeURIComponent(q)}` : ''}`,
         )
       ).data,
