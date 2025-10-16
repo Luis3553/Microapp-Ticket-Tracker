@@ -6,7 +6,6 @@ import {
   Req,
   Res,
   UseGuards,
-  UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -15,6 +14,7 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { rtCookieOpts } from './config/cookieOpts';
 import type { RequestWithUser } from './types/requests';
+import { RefreshAuthGuard } from './guards/jwt-refresh-auth/jwt-refresh-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -45,13 +45,14 @@ export class AuthController {
 
   // --- REFRESH (reads HttpOnly cookie) ---
   @Post('refresh')
+  @UseGuards(RefreshAuthGuard)
   async refresh(
     @Req() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const rt = typeof req.cookies?.rt === 'string' ? req.cookies.rt : null;
-    if (!rt) throw new UnauthorizedException('Missing refresh cookie');
-    const { user, accessToken, refreshToken } = await this.auth.refresh(rt);
+    const { user, accessToken, refreshToken } = await this.auth.refresh(
+      req.user.id,
+    );
     res.cookie('rt', refreshToken, rtCookieOpts);
     return { user, accessToken };
   }

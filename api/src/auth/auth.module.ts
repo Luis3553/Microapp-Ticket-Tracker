@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UsersRepository } from 'src/users/users.repository';
 import { DbModule } from 'src/db/db.module';
+import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DbModule } from 'src/db/db.module';
     UsersService,
     JwtStrategy,
     LocalStrategy,
+    RefreshJwtStrategy,
     UsersRepository,
   ],
 })
