@@ -1,15 +1,10 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import * as React from 'react'
 import { api } from '@/lib/axios'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/features/shared/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/features/shared/components/ui/card'
 import { Button } from '@/features/shared/components/ui/button'
 import { Textarea } from '@/features/shared/components/ui/textarea'
-import * as React from 'react'
 
 type Issue = {
   id: number
@@ -35,7 +30,7 @@ export const Route = createFileRoute('/app/issues/$id/')({
 })
 
 function IssueDetailPage() {
-  const { id } = useParams({ from: '/app/issues/$id/' }) as { id: string }
+  const { id } = useParams({ from: '/app/issues/$id/' })
   const issueId = Number(id)
   const qc = useQueryClient()
 
@@ -45,22 +40,19 @@ function IssueDetailPage() {
   })
   const labels = useQuery({
     queryKey: ['issue', issueId, 'labels'],
-    queryFn: async () =>
-      (await api.get<Label[]>(`/issues/${issueId}/labels`)).data,
+    queryFn: async () => (await api.get<Array<Label>>(`/issues/${issueId}/labels`)).data,
   })
   const comments = useQuery({
     queryKey: ['issue', issueId, 'comments'],
-    queryFn: async () =>
-      (await api.get<Comment[]>(`/issues/${issueId}/comments`)).data,
+    queryFn: async () => (await api.get<Array<Comment>>(`/issues/${issueId}/comments`)).data,
   })
   const events = useQuery({
     queryKey: ['issue', issueId, 'events'],
-    queryFn: async () =>
-      (await api.get<Event[]>(`/issues/${issueId}/events`)).data,
+    queryFn: async () => (await api.get<Array<Event>>(`/issues/${issueId}/events`)).data,
   })
   const allLabels = useQuery({
     queryKey: ['labels'],
-    queryFn: async () => (await api.get<Label[]>('/labels')).data,
+    queryFn: async () => (await api.get<Array<Label>>('/labels')).data,
   })
 
   const updateStatus = useMutation({
