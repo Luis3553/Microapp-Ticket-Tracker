@@ -1,7 +1,7 @@
-import { JwtRefreshAuthGuard } from './jwt-refresh-auth.guard';
+import { RefreshAuthGuard } from './jwt-refresh-auth.guard';
 
-describe('JwtRefreshAuthGuard', () => {
+describe('RefreshAuthGuard', () => {
   it('should be defined', () => {
-    expect(new JwtRefreshAuthGuard()).toBeDefined();
+    expect(new RefreshAuthGuard()).toBeDefined();
   });
 });

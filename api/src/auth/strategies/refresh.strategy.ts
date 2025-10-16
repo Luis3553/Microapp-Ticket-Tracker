@@ -4,8 +4,10 @@ import { ExtractJwt, Strategy, StrategyOptionsWithRequest } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import type { Request } from 'express';
 import { AuthJwtPayload } from '../types/auth-jwtPayload';
+import type { RequestUser } from '../types/requests';
 
-const cookieExtractor = (req: Request) => req?.cookies?.rt ?? null;
+const cookieExtractor = (req: Request): string | null =>
+  (req?.cookies?.rt as string) ?? null;
 
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(
@@ -21,7 +23,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
     };
     super(options);
   }
-  validate(req: Request, payload: AuthJwtPayload) {
+  validate(req: Request, payload: AuthJwtPayload): RequestUser {
     return { id: payload.id, role: payload.role };
   }
 }
