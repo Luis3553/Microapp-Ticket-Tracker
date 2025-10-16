@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,17 +10,14 @@ import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { RegisterDto } from './dto/register-dto';
 import { compare } from 'bcrypt';
 import { PublicUser } from 'src/types/user';
-
-const ACCESS_SECRET = process.env.JWT_SECRET as JwtSignOptions['secret'];
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || ACCESS_SECRET;
-const ACCESS_TTL = (process.env.JWT_ACCESS_EXPIRES_IN ||
-  '7d') as JwtSignOptions['expiresIn'];
-const REFRESH_TTL = (process.env.JWT_REFRESH_EXPIRES_IN ||
-  '7d') as JwtSignOptions['expiresIn'];
+import { RequestUser } from './types/requests';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(ConfigService)
+    private readonly config: ConfigService,
     private readonly users: UsersService,
     private readonly jwt: JwtService,
   ) {}
@@ -52,23 +50,14 @@ export class AuthService {
     return { user, ...tokens };
   }
 
-  login(user: PublicUser) {
+  login(user: RequestUser) {
     const tokens = this.issueTokens(user);
     return { user, ...tokens };
   }
 
-  async refresh(refreshToken: string) {
-    let payload: AuthJwtPayload;
-    try {
-      payload = this.jwt.verify<AuthJwtPayload>(refreshToken, {
-        secret: REFRESH_SECRET,
-      });
-    } catch {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
-    const u = await this.users.findById(payload.id);
+  async refresh(userId: number) {
+    const u = await this.users.findById(userId);
     if (!u) throw new UnauthorizedException();
-
     const user: PublicUser = {
       id: u.id,
       email: u.email,
@@ -91,20 +80,19 @@ export class AuthService {
     return user;
   }
 
-  private issueTokens(user: PublicUser) {
+  private issueTokens(user: RequestUser) {
     const payload: AuthJwtPayload = {
       id: user.id,
-      email: user.email,
       role: user.role,
     };
     const accessToken = this.jwt.sign(payload, {
-      secret: ACCESS_SECRET,
-      expiresIn: ACCESS_TTL,
-    });
+      secret: this.config.get<string>('JWT_SECRET'),
+      expiresIn: this.config.get<string>('JWT_EXPIRE_IN'),
+    } as JwtSignOptions);
     const refreshToken = this.jwt.sign(payload, {
-      secret: REFRESH_SECRET,
-      expiresIn: REFRESH_TTL,
-    });
+      secret: this.config.get<string>('JWT_REFRESH_SECRET'),
+      expiresIn: this.config.get<string>('JWT_REFRESH_EXPIRE_IN'),
+    } as JwtSignOptions);
     return { accessToken, refreshToken };
   }
 }
