@@ -11,7 +11,7 @@ git clone https://github.com/Luis3553/Microapp-Issue-Tracker.git
 cd Microapp-Issue-Tracker
 cp .db.env.example .db.env && cp api/.env.example api/.env && cp web/.env.example web/.env
 docker compose up --build -d
-cd api && npx drizzle-kit push && cd ..
+docker compose run --rm api npm run migrate
 docker compose run --rm api node dist/src/db/seed.js
 ```
 
@@ -88,8 +88,8 @@ VITE_API_URL=http://localhost:5172
 # Build and start all services
 docker compose up --build -d
 
-# Apply DB migrations (run from host; the container runtime image doesn’t include drizzle.config.ts)
-cd api && npx drizzle-kit push && cd ..
+# Apply DB migrations (inside the API container)
+docker compose run --rm api npm run migrate
 
 # Seed initial data (admin/user, project, issues, labels, comments, events)
 docker compose run --rm api node dist/src/db/seed.js
